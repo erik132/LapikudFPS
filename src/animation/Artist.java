@@ -10,6 +10,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 
 
 
@@ -18,6 +19,8 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	private GLU glu;
 	
 	private double angle = 0;
+	
+	private GLUquadric quadric;
 	
 	private ArtistAssistant assistant = new ArtistAssistant();
 	
@@ -31,6 +34,10 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	      gl.glDepthFunc(GL2.GL_LEQUAL);  // the type of depth test to do
 	      gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best perspective correction
 	      gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+	      
+	      this.quadric = glu.gluNewQuadric(); // create a pointer to the Quadric object ( NEW )
+	      glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH); // create smooth normals ( NEW )
+	      glu.gluQuadricTexture(quadric, true); // create texture coords ( NEW )
 		
 	}
 
@@ -48,13 +55,13 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	      
 
 	      // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
-	      gl.glTranslatef(0.0f, 0.0f, -10.0f); // translate into the screen
+	      gl.glTranslatef(0.0f, 0.0f, -20.0f); // translate into the screen
 	      this.angle++;
 	      //gl.glRotated(this.angle, 1, 0.7, 0.5);
 	      gl.glRotated(this.angle, 0, 0.7, 0);
 	      //this.assistant.drawColoredCuboid(gl, 1, -1, -1, -1, 1, 1);
-	      gl.glColor3d(1, 0.5, 0.5);
-	      this.assistant.drawLAP(gl, 0, 0, 0);
+	      gl.glColor3d(0.961, 0.506, 0.125);
+	      this.assistant.drawLAP(gl,this.glu, this.quadric, 0, 0, 0);
 		
 	}
 
