@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Frame;
+import java.awt.Robot;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -9,6 +10,7 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 
 import animation.Artist;
+import animation.Camera;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -21,6 +23,8 @@ public class Main {
 	public static final int WINDOW_SIZE_Y = 800;
 
 	public static void main(String[] args) {
+
+		
 		GLProfile glp = GLProfile.getDefault();
         GLCapabilities caps = new GLCapabilities(glp);
         GLCanvas canvas = new GLCanvas(caps);
@@ -28,6 +32,8 @@ public class Main {
         Frame frame = new Frame(GAME_NAME);
         frame.setSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
         frame.add(canvas);
+        //frame.setUndecorated(true);
+        //frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
         frame.addWindowListener(new WindowAdapter() {
@@ -36,12 +42,16 @@ public class Main {
             }
         });
         
-        Artist artist = new Artist();
+        
+        Artist artist = new Artist(frame);
+        
         canvas.addGLEventListener(artist);
         canvas.addKeyListener(artist);
         canvas.addMouseListener(artist);
         canvas.addMouseMotionListener(artist);
-
+        
+        
+        
         FPSAnimator animator = new FPSAnimator(canvas, 60);
         animator.start();
 

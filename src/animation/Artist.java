@@ -1,5 +1,8 @@
 package animation;
 
+import java.awt.AWTException;
+import java.awt.Frame;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -12,6 +15,8 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
+import main.Main;
+
 
 
 public class Artist implements GLEventListener, MouseListener, MouseMotionListener, KeyListener{
@@ -23,6 +28,28 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	private GLUquadric quadric;
 	
 	private ArtistAssistant assistant = new ArtistAssistant();
+	
+	private Camera camera;
+	
+	private double currentMouseX;
+	
+	private double currentMouseY;
+	
+	private Frame frame;
+	
+	private Robot robot;
+	
+	public Artist(Frame frame){
+		this.frame = frame;
+		this.currentMouseY = frame.getMousePosition().getY();
+		this.currentMouseX = frame.getMousePosition().getX();
+		try {
+			this.robot = new Robot();
+			this.robot.mouseMove(Main.WINDOW_SIZE_X/2, Main.WINDOW_SIZE_Y/2);
+		} catch (AWTException e) {
+			System.out.println("robot has failed");
+		}
+	}
 	
 	@Override
 	public void init(GLAutoDrawable drawable) {
@@ -38,6 +65,7 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	      this.quadric = glu.gluNewQuadric(); // create a pointer to the Quadric object ( NEW )
 	      glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH); // create smooth normals ( NEW )
 	      glu.gluQuadricTexture(quadric, true); // create texture coords ( NEW )
+	      this.camera = new Camera(1, 1, 1, 270 , 0);
 		
 	}
 
@@ -53,15 +81,22 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	      gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 	      gl.glLoadIdentity();  // reset the model-view matrix
 	      
-
+	      //this.camera.setHorisontalAngle(this.camera.getHorisontalAngle() +1);
+	      this.camera.setCameraView(this.glu);
 	      // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
 	      gl.glTranslatef(0.0f, 0.0f, -20.0f); // translate into the screen
 	      this.angle++;
 	      //gl.glRotated(this.angle, 1, 0.7, 0.5);
-	      gl.glRotated(this.angle, 0, 0.7, 0);
+	      //gl.glRotated(this.angle, 0, 0.7, 0);
 	      //this.assistant.drawColoredCuboid(gl, 1, -1, -1, -1, 1, 1);
 	      gl.glColor3d(0.961, 0.506, 0.125);
 	      this.assistant.drawLAP(gl,this.glu, this.quadric, 0, 0, 0);
+	      
+	      gl.glColor3d(0, 1, 0);
+	      this.assistant.drawYRectangle(gl, -1, 50, 50, -50, -50);
+	      gl.glColor3d(0, 0, 1);
+	      this.assistant.drawYRectangle(gl, -0.99, 5, 50, -5, -50);
+	      
 		
 	}
 
@@ -89,7 +124,7 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+		this.camera.walkCamera(arg0.getKeyCode());
 		
 	}
 
@@ -113,7 +148,19 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		//System.out.println("mouse moved " + arg0.getX() + " " + arg0.getY());
+		//System.out.println(arg0.getX() + " " + arg0.getY());
+		//System.out.println((arg0.getX() - this.currentMouseX) + " " + (arg0.getY() - this.currentMouseY));
+
+		
+		/*if(arg0.getX() == Main.WINDOW_SIZE_X/2 && arg0.getY() == Main.WINDOW_SIZE_Y/2){
+			System.out.println("not moving");
+		}else{
+			this.camera.setHorisontalAngle(this.camera.getHorisontalAngle() + ((arg0.getX() - Main.WINDOW_SIZE_X/2)*0.1));
+			//this.currentMouseX = arg0.getX();
+			//this.currentMouseY = arg0.getY();
+			this.robot.mouseMove(Main.WINDOW_SIZE_X/2, Main.WINDOW_SIZE_Y/2);
+		}*/
 		
 	}
 
