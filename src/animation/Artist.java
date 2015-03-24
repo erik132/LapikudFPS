@@ -55,7 +55,7 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	public void init(GLAutoDrawable drawable) {
 	      GL2 gl = drawable.getGL().getGL2();      // get the OpenGL graphics context
 	      this.glu = new GLU();
-	      gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
+	      gl.glClearColor(0.3f, 0.3f, 0.3f, 0.0f); // set background (clear) color
 	      gl.glClearDepth(1.0f);      // set clear depth value to farthest
 	      gl.glEnable(GL2.GL_DEPTH_TEST); // enables depth testing
 	      gl.glDepthFunc(GL2.GL_LEQUAL);  // the type of depth test to do
@@ -84,18 +84,31 @@ public class Artist implements GLEventListener, MouseListener, MouseMotionListen
 	      //this.camera.setHorisontalAngle(this.camera.getHorisontalAngle() +1);
 	      this.camera.setCameraView(this.glu);
 	      // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
-	      gl.glTranslatef(0.0f, 0.0f, -20.0f); // translate into the screen
-	      this.angle++;
-	      //gl.glRotated(this.angle, 1, 0.7, 0.5);
-	      //gl.glRotated(this.angle, 0, 0.7, 0);
-	      //this.assistant.drawColoredCuboid(gl, 1, -1, -1, -1, 1, 1);
-	      gl.glColor3d(0.961, 0.506, 0.125);
-	      this.assistant.drawLAP(gl,this.glu, this.quadric, 0, 0, 0);
+	       // translate into the screen
+	      
+	      for(Bullet bullet : this.camera.getBullets()){
+	    	  bullet.tickBullet(gl);
+	      }
+	      
+	      gl.glTranslatef(0.0f, 0.0f, -20.0f);
+	      gl.glColor3d(0, 0, 0);
+	      this.assistant.drawCuboid(gl, -30, 30, -10, 30, -0.97, -10.5);
+	      this.assistant.drawYRectangle(gl, -0.97, -30, -10, 30, 20);
 	      
 	      gl.glColor3d(0, 1, 0);
 	      this.assistant.drawYRectangle(gl, -1, 50, 50, -50, -50);
 	      gl.glColor3d(0, 0, 1);
 	      this.assistant.drawYRectangle(gl, -0.99, 5, 50, -5, -50);
+	      
+	      
+	      this.angle++;
+	      //gl.glRotated(this.angle, 1, 0.7, 0.5);
+	      gl.glRotated(this.angle, 0, 0.7, 0);
+	      //this.assistant.drawColoredCuboid(gl, 1, -1, -1, -1, 1, 1);
+	      gl.glColor3d(0.961, 0.506, 0.125);
+	      this.assistant.drawLAP(gl,this.glu, this.quadric, 0, 0, 0);
+	      
+	      
 	      
 		
 	}

@@ -1,5 +1,8 @@
 package animation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.media.opengl.glu.GLU;
 
 public class Camera {
@@ -26,6 +29,8 @@ public class Camera {
 	
 	public static final int LOOK_RIGHT = 39;
 	
+	public static final int FIRE = 32;
+	
 	private double positionX;
 	
 	private double positionY;
@@ -41,6 +46,8 @@ public class Camera {
 	private double horisontalAngle;
 	
 	private double verticalAngle;
+	
+	private List<Bullet> bullets = new ArrayList<>();
 	
 	public Camera(double positionX, double positionY, double positionZ, double horisontalAngle, double verticalAngle){
 		this.positionX = positionX;
@@ -70,7 +77,7 @@ public class Camera {
 		this.viewX = viewRange2 * Math.cos(this.horisontalAngle*(1/this.reversePii));
 		this.viewZ = viewRange2 * Math.sin(this.horisontalAngle*(1/this.reversePii));
 
-		System.out.println("horisontal angle " + this.horisontalAngle);
+		/*System.out.println("horisontal angle " + this.horisontalAngle);
 		System.out.println("vertical angle " + this.verticalAngle);
 		System.out.println("x view " + this.viewX);
 		System.out.println("z view " + this.viewZ);
@@ -79,8 +86,12 @@ public class Camera {
 		System.out.println("x position " + this.positionX);
 		System.out.println("z position " + this.positionZ);
 		System.out.println("y position " + this.positionY);
-		System.out.println(" ");
+		System.out.println(" ");*/
 		
+	}
+	
+	private void fire(){
+		bullets.add(new Bullet(this.positionX, this.positionY, this.positionZ,this.horisontalAngle,this.verticalAngle));
 	}
 	
 	private double correctHAngle(double angle){
@@ -123,7 +134,7 @@ public class Camera {
 	}
 	
 	public synchronized void walkCamera(int direction){
-		//System.out.println(direction);
+		System.out.println(direction);
 		switch(direction){
 		case FORWARD:
 
@@ -157,7 +168,14 @@ public class Camera {
 		case DOWN:
 			this.setVerticalAngle(this.getVerticalAngle() -1);
 			break;
+		case FIRE:
+			this.fire();
+			break;
 		}
 		this.correctView();
+	}
+	
+	public List<Bullet> getBullets(){
+		return this.bullets;
 	}
 }
